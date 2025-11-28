@@ -1,13 +1,17 @@
-// import express from "express";
-// import {
-//   getMessages,
-//   createMessage,
-// } from "../controllers/forumPostController.js";
-// import authUser from "../middleware/authUser.js";
+import express from "express";
+import authUser from "../middleware/authUser.js";
+import {
+  createPost,
+  createReply,
+  getPost,
+  getPosts,
+} from "../controllers/forumController.js";
 
-// const forumRouter = express.Router();
+const forumRouter = express.Router();
 
-// forumRouter.get("/messages", authUser, getMessages);
-// forumRouter.post("/messages", authUser, createMessage);
+forumRouter.get("/posts", authUser, getPosts);
+forumRouter.get("/post/:id", authUser, getPost);
+forumRouter.post("/post", authUser, createPost);
+forumRouter.post("/reply", authUser, createReply);
 
-// export default forumRouter;
+export default forumRouter;

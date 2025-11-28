@@ -4,11 +4,11 @@ import { v2 as cloudinary } from "cloudinary";
 // CREATE ARTICLE
 export const createArticle = async (req, res) => {
   try {
-    const { title, category, content, author } = req.body;
-    const coverImageFile = req?.files?.coverImage;
+    const { title, category, content } = req.body;
+    const coverImageFile = req?.file; // Multer stores the file in req.file
 
-    if (!title || !category || !content || !author) {
-      return res.json({
+    if (!title || !category || !content) {
+      return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
@@ -33,24 +33,25 @@ export const createArticle = async (req, res) => {
       category,
       content,
       coverImage,
-      author,
+      author: req?.user?._id, // Use req.user._id
       readTime,
     });
 
-    res.json({
+    res.status(201).json({
       success: true,
       message: "Article created successfully",
       article,
     });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    console.error("Create Article Error:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 // GET ALL ARTICLES
 export const getArticle = async (req, res) => {
   try {
-    const article = await Article.find().sort({ createdAt: -1 });
+    const article = await Article.find().populate("author", "name");
     res.json({ success: true, article });
   } catch (error) {
     res.json({ success: false, message: error.message });
@@ -61,7 +62,7 @@ export const getArticle = async (req, res) => {
 export const getOneArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    const article = await Article.findById(id);
+    const article = await Article.findById(id).populate("author", "name");
 
     if (!article) {
       return res.json({ success: false, message: "Article not found" });
@@ -81,7 +82,7 @@ export const updateArticle = async (req, res) => {
     const updatedData = req.body;
 
     // Handle image update
-    if (req.files?.coverImage) {
+    if (req.file) {
       const upload = await cloudinary.uploader.upload(
         req.files.coverImage.path,
         {

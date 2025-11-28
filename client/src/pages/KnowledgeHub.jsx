@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Replace with your axios logic if needed
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext.jsx";
 
 const CATEGORIES = [
   "All",
@@ -16,16 +18,18 @@ const HERO_IMAGE =
 const TOP_ARTICLES_COUNT = 4;
 
 function KnowledgeHub() {
+  const { user } = useAppContext();
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState("All");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get("/api/article")
+      .get("/api/article/get")
       .then((res) => {
         if (res.data.success) {
-          setArticles(res.data.article);
+          console.log(res.data.article);
+          setArticles(res.data.article); // Only shows what's in your DB
         }
       })
       .finally(() => setLoading(false));
@@ -36,7 +40,11 @@ function KnowledgeHub() {
       ? articles
       : articles.filter((a) => a.category === category);
 
-  const topArticles = articles.slice(0, TOP_ARTICLES_COUNT).map((a) => a.title);
+  // Show top N articles if real articles exist
+  const topArticles =
+    category === "All"
+      ? articles
+      : articles.filter((a) => a.category === category);
 
   return (
     <div className="min-h-screen bg-white text-[#212121]">
@@ -80,9 +88,13 @@ function KnowledgeHub() {
                   />
                 </div>
               </label>
-              <button className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-[#2E7D32] text-white text-sm font-bold transition-colors hover:bg-opacity-90">
-                Login
-              </button>
+              {!user && (
+                <Link
+                  to={`/`}
+                  className="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-[#2E7D32] text-white text-sm font-bold transition-colors hover:bg-opacity-90">
+                  Login
+                </Link>
+              )}
             </div>
           </header>
           {/* MAIN */}
@@ -127,7 +139,7 @@ function KnowledgeHub() {
             </div>
             {/* Grid Content */}
             <div className="flex flex-col md:flex-row gap-12">
-              {/* Grid */}
+              {/* Article grid */}
               <div className="flex-grow">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
                   {loading && (
@@ -142,9 +154,10 @@ function KnowledgeHub() {
                   )}
                   {!loading &&
                     filtered.map((a) => (
-                      <div
+                      <Link
                         key={a._id}
-                        className="flex flex-col gap-3 pb-3 group">
+                        to={`/article/${a._id}`}
+                        className="flex flex-col gap-3 pb-3 group cursor-pointer hover:shadow-lg transition">
                         <div className="w-full aspect-video bg-center bg-cover rounded-lg overflow-hidden">
                           <div
                             className="w-full h-full bg-center bg-cover group-hover:scale-105 transition-transform duration-300"
@@ -165,22 +178,15 @@ function KnowledgeHub() {
                             {a.content && a.content.length > 100 ? "..." : ""}
                           </p>
                           <p className="text-gray-500 text-xs">
-                            {a.author?.name || a.author || "Unknown Author"} •{" "}
+                            {a.author?.name || "Unknown Author"} •{" "}
                             {a.readTime || 5} min read
                           </p>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                 </div>
-                {/* Pagination (static for now) */}
+                {/* Pagination remains unchanged */}
                 <div className="flex items-center justify-center p-4">
-                  <a
-                    href="#"
-                    className="flex size-10 items-center justify-center rounded-lg hover:bg-[#F5F5F5]">
-                    <span className="material-symbols-outlined">
-                      chevron_left
-                    </span>
-                  </a>
                   <a
                     href="#"
                     className="text-sm font-bold size-10 flex items-center justify-center text-white rounded-lg bg-[#2E7D32]">
@@ -199,13 +205,6 @@ function KnowledgeHub() {
                     className="size-10 flex items-center justify-center rounded-lg hover:bg-[#F5F5F5] text-[#212121]">
                     10
                   </a>
-                  <a
-                    href="#"
-                    className="flex size-10 items-center justify-center rounded-lg hover:bg-[#F5F5F5]">
-                    <span className="material-symbols-outlined">
-                      chevron_right
-                    </span>
-                  </a>
                 </div>
               </div>
               {/* Sidebar */}
@@ -213,19 +212,23 @@ function KnowledgeHub() {
                 <div className="sticky top-10 bg-[#F5F5F5] p-6 rounded-xl">
                   <h3 className="text-xl font-bold mb-6">Top Articles</h3>
                   <div className="flex flex-col gap-6">
-                    {topArticles.map((title, idx) => (
-                      <a
-                        key={title}
-                        href="#"
-                        className="group flex items-center gap-4">
-                        <div className="text-4xl font-black text-gray-300 transition-colors group-hover:text-[#2E7D32]">
-                          {`0${idx + 1}`}
-                        </div>
-                        <p className="text-sm font-medium text-[#212121] group-hover:text-[#2E7D32]">
-                          {title}
-                        </p>
-                      </a>
-                    ))}
+                    {topArticles.length === 0 ? (
+                      <span className="text-gray-400">No articles yet.</span>
+                    ) : (
+                      topArticles.map((a, idx) => (
+                        <a
+                          key={a.title}
+                          href={`/article/${a._id}`}
+                          className="group flex items-center gap-4">
+                          <div className="text-4xl font-black text-gray-300 transition-colors group-hover:text-[#2E7D32]">
+                            {`0${idx + 1}`}
+                          </div>
+                          <p className="text-sm font-medium text-[#212121] group-hover:text-[#2E7D32]">
+                            {a.title}
+                          </p>
+                        </a>
+                      ))
+                    )}
                   </div>
                 </div>
               </aside>

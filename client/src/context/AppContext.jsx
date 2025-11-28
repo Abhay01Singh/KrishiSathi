@@ -16,22 +16,23 @@ export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // Check authentication on app load
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data } = await axios.get("/api/auth/isauth");
-        if (data.success) {
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
+  const checkAuth = async () => {
+    try {
+      const { data } = await axios.get("/api/auth/isauth");
+      if (data.success) {
+        setUser(data.user);
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     checkAuth();
   }, []);
 

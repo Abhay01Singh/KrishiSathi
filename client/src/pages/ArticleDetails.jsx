@@ -8,12 +8,21 @@ function ArticleDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`/api/article/${id}`)
-      .then((res) => {
-        if (res.data.success) setArticle(res.data.article);
-      })
-      .finally(() => setLoading(false));
+    async function fetchArticle() {
+      try {
+        const { data } = await axios.get(`/api/article/get/${id}`);
+        if (data.success) {
+          setArticle(data.article);
+        } else {
+          setArticle(null);
+        }
+      } catch (error) {
+        setArticle(null);
+      } finally {
+        setLoading(false); // Now loading state will update
+      }
+    }
+    fetchArticle();
   }, [id]);
 
   if (loading) return <div className="p-10 text-center">Loading...</div>;
@@ -30,7 +39,7 @@ function ArticleDetail() {
           <span className="font-bold text-xl">Krishisathi</span>
         </Link>
         <Link
-          to="/"
+          to="/article"
           className="bg-[#2E7D32] text-white px-3 py-1 rounded font-bold">
           Back
         </Link>

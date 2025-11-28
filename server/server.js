@@ -7,6 +7,9 @@ import dotenv from "dotenv";
 import http from "http";
 import { Server } from "socket.io";
 import connectCloudinary from "./config/cloudinary.js";
+import articleRouter from "./routes/ArticleRoutes.js";
+import forumRouter from "./routes/forumRoutes.js";
+import productRouter from "./routes/productRoute.js";
 
 dotenv.config();
 
@@ -23,13 +26,6 @@ app.use(
   })
 );
 
-// API routes
-app.use("/api/auth", authRoutes);
-// app.use("/api/weather", weatherRouter);
-// app.use("/api/land", landRouter);
-// app.use("/api/forum", forumRouter);
-
-// Connect to DB
 try {
   await connectDB();
   console.log("Connected to Database");
@@ -39,6 +35,12 @@ try {
 }
 
 await connectCloudinary();
+
+// API routes
+app.use("/api/auth", authRoutes);
+app.use("/api/article", articleRouter);
+app.use("/api/forum", forumRouter);
+app.use("/api/product", productRouter);
 
 // Create HTTP + Socket server
 const server = http.createServer(app);

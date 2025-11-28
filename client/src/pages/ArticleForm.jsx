@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAppContext } from "../context/AppContext.jsx";
+import toast from "react-hot-toast";
 
 const EMPTY_ARTICLE = {
   title: "",
@@ -22,11 +24,11 @@ function ArticleForm() {
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const { id } = useParams(); // If present, edit mode
-  const navigate = useNavigate();
+  const { navigate } = useAppContext();
 
   useEffect(() => {
     if (id) {
-      axios.get(`/api/article/${id}`).then((res) => {
+      axios.get(`/api/article/get/${id}`).then((res) => {
         if (res.data.success) setForm(res.data.article);
       });
     }
@@ -50,13 +52,18 @@ function ArticleForm() {
     // data.append("author", currentUserId);
 
     const req = id
-      ? axios.put(`/api/article/${id}`, data)
-      : axios.post("/api/article", data);
+      ? axios.put(`/api/article/update/${id}`, data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+      : axios.post("/api/article/create", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
     req
       .then((res) => {
         if (res.data.success) {
-          navigate("/");
+          navigate("/article");
+          toast.success("Article created successfully");
         } else {
           alert(res.data.message);
         }
