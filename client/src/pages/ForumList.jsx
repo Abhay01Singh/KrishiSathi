@@ -9,6 +9,7 @@ const CATEGORIES = [
   "Pest Control",
   "Soil Health",
   "Trending",
+  "Announcements",
 ];
 
 export default function ForumList() {
