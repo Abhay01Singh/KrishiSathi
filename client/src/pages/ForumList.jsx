@@ -22,6 +22,7 @@ export default function ForumList() {
   const fetchPosts = async () => {
     try {
       const { data } = await axios.get("/api/forum/posts", {
+        // params is main factor to categories post according to category and search
         params: { category, search },
       });
 
