@@ -21,30 +21,32 @@ function KnowledgeHub() {
   const { user } = useAppContext();
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState("All");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const fetchArticle = async () => {
+    try {
+      const { data } = await axios.get("/api/article/get", {
+        params: { category, search },
+      });
+      if (data.success) {
+        setArticles(data.article);
+      } else {
+        console.log("error in article fetching");
+      }
+    } catch (error) {
+      console.error("Failed to load articles:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get("/api/article/get")
-      .then((res) => {
-        if (res.data.success) {
-          console.log(res.data.article);
-          setArticles(res.data.article); // Only shows what's in your DB
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    fetchArticle();
+  }, [category, search]);
 
-  const filtered =
-    category === "All"
-      ? articles
-      : articles.filter((a) => a.category === category);
-
-  // Show top N articles if real articles exist
-  const topArticles =
-    category === "All"
-      ? articles
-      : articles.filter((a) => a.category === category);
+  const filtered = articles;
+  const topArticles = articles.slice(0, TOP_ARTICLES_COUNT);
 
   return (
     <div className="min-h-screen bg-white text-[#212121]">
@@ -85,6 +87,8 @@ function KnowledgeHub() {
                   <input
                     className="form-input w-full min-w-0 flex-1 rounded-lg text-[#212121] bg-[#F5F5F5] h-full px-4 border-none placeholder:text-gray-500"
                     placeholder="Search articles..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
               </label>

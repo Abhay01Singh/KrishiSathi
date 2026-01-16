@@ -51,10 +51,28 @@ export const createArticle = async (req, res) => {
 // GET ALL ARTICLES
 export const getArticle = async (req, res) => {
   try {
-    const article = await Article.find().populate("author", "name");
+    const { category, search } = req.query;
+    console.log(req.query);
+    let query = {};
+
+    if (category && category !== "All") {
+      query.category = { $regex: category, $options: "i" };
+    }
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { content: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const article = await Article.find(query)
+      .populate("author", "name")
+      .sort({ createdAt: -1 });
+
     res.json({ success: true, article });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
