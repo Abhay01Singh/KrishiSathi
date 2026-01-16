@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext.jsx";
 
-const filters = [
-  { label: "All Products", cat: "" },
-  { label: "Seeds", cat: "Seeds" },
-  { label: "Fertilizers", cat: "Fertilizers" },
-  { label: "Tools & Machinery", cat: "Tools" },
-  { label: "Livestock", cat: "Livestock" },
+const CATEGORIES = [
+  "All Products",
+  "Seeds",
+  "Fertilizers",
+  "Tools",
+  "Livestock",
 ];
 
 export default function MarketplacePage() {
   const { axios } = useAppContext();
   const [products, setProducts] = useState([]);
-  const [catFilter, setCatFilter] = useState("");
+  const [category, setCategory] = useState("All Products");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [backendError, setBackendError] = useState("");
 
@@ -21,7 +22,9 @@ export default function MarketplacePage() {
     setLoading(true);
     setBackendError("");
     try {
-      const { data } = await axios.get("/api/product/");
+      const { data } = await axios.get("/api/product/", {
+        params: { category, search },
+      });
       if (data.success && data.product) setProducts(data.product);
       else setBackendError(data.message || "Could not load products.");
     } catch (error) {
@@ -32,12 +35,7 @@ export default function MarketplacePage() {
 
   useEffect(() => {
     fetchProducts();
-    // eslint-disable-next-line
-  }, []);
-
-  const visibleProducts = catFilter
-    ? products.filter((p) => p.category === catFilter)
-    : products;
+  }, [category, search]);
 
   return (
     <div className="font-display bg-[#F5F5DC] min-h-screen text-[#111812]">
@@ -48,6 +46,17 @@ export default function MarketplacePage() {
               agriculture
             </span>
             <h2 className="text-xl font-bold tracking-tight">Krishisathi</h2>
+          </div>
+          <div className="flex w-full items-stretch rounded-lg h-full">
+            <div className="flex items-center justify-center pl-3 rounded-l-lg bg-[#F5F5F5] text-gray-500 border-r-0">
+              <span className="material-symbols-outlined">search</span>
+            </div>
+            <input
+              className="form-input w-full min-w-0 flex-1 rounded-lg text-[#212121] bg-[#F5F5F5] h-full px-4 border-none placeholder:text-gray-500"
+              placeholder="Search Products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <Link
             to="/admin/products"
@@ -66,16 +75,16 @@ export default function MarketplacePage() {
                   <p className="text-sm text-[#388E3C]">Refine your search</p>
                 </div>
                 <div className="flex flex-col pl-4 gap-1 text-sm mt-2">
-                  {filters.map((f) => (
+                  {CATEGORIES.map((cat) => (
                     <button
-                      key={f.label}
+                      key={cat}
                       className={`text-left block py-1 px-2 rounded-md font-semibold ${
-                        f.cat === catFilter
+                        cat === category
                           ? "bg-[#C8E6C9] text-[#4CAF50]"
                           : "hover:bg-black/5"
                       }`}
-                      onClick={() => setCatFilter(f.cat)}>
-                      {f.label}
+                      onClick={() => setCategory(cat)}>
+                      {cat}
                     </button>
                   ))}
                 </div>
@@ -104,12 +113,12 @@ export default function MarketplacePage() {
                 <div className="col-span-3 text-center text-2xl">
                   Loading...
                 </div>
-              ) : visibleProducts.length === 0 ? (
+              ) : products.length === 0 ? (
                 <div className="col-span-3 text-center text-gray-400 text-lg">
                   No products found.
                 </div>
               ) : (
-                visibleProducts.map((p) => (
+                products.map((p) => (
                   <Link
                     to={`/product/${p._id}`}
                     key={p._id}

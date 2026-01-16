@@ -46,7 +46,18 @@ export const getProduct = async (req, res) => {
 // get all product
 export const getAllProduct = async (req, res) => {
   try {
-    const product = await Product.find().populate("seller", "name");
+    const { category, search } = req.query;
+    let query = {};
+    if (category && category !== "All Products") {
+      query.category = { $regex: category, $options: "i" };
+    }
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+    const product = await Product.find(query)
+      .populate("seller", "name")
+      .sort({ createdAt: -1 });
     res.json({ success: true, product });
   } catch (error) {
     res.json({ success: false, message: error.message });
