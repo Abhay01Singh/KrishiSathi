@@ -6,6 +6,7 @@ import {
   getArticle,
   getOneArticle,
   updateArticle,
+  getUserArticles,
 } from "../controllers/ArticleController.js";
 import { upload } from "../config/multer.js";
 
@@ -17,7 +18,8 @@ articleRouter.post(
   upload.single("coverImage"),
   createArticle
 );
-articleRouter.get("/get", authUser, getArticle);
+articleRouter.get("/my-articles", authUser, getUserArticles);
+articleRouter.get("/get", getArticle);
 articleRouter.get("/get/:id", authUser, getOneArticle);
 articleRouter.put(
   "/update/:id",

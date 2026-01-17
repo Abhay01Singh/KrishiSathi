@@ -73,6 +73,21 @@ export const getArticle = async (req, res) => {
   }
 };
 
+// GET USER'S OWN ARTICLES
+export const getUserArticles = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const articles = await Article.find({ author: userId })
+      .populate("author", "name")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, articles });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // GET ARTICLE BY ID
 export const getOneArticle = async (req, res) => {
   try {
@@ -98,13 +113,10 @@ export const updateArticle = async (req, res) => {
 
     // Handle image update
     if (req.file) {
-      const upload = await cloudinary.uploader.upload(
-        req.files.coverImage.path,
-        {
-          resource_type: "image",
-          folder: "article_cover",
-        }
-      );
+      const upload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+        folder: "article_cover",
+      });
       updatedData.coverImage = upload.secure_url;
     }
 

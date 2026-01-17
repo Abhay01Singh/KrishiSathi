@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 const CATEGORIES = [
   "All",
@@ -56,27 +57,11 @@ function KnowledgeHub() {
           <header className="flex items-center justify-between border-b border-[#F5F5F5] py-4 px-2 sm:px-6">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-3 text-[#2E7D32]">
-                <span className="material-symbols-outlined text-3xl">
-                  agriculture
-                </span>
                 <h2 className="text-xl font-bold tracking-tight">
                   Krishisathi
                 </h2>
               </div>
-              <nav className="hidden md:flex items-center gap-9">
-                <a href="#" className="text-[#212121] text-sm font-medium">
-                  Home
-                </a>
-                <a href="#" className="text-[#2E7D32] font-bold text-sm">
-                  Knowledge Hub
-                </a>
-                <a href="#" className="text-[#212121] text-sm font-medium">
-                  Market Prices
-                </a>
-                <a href="#" className="text-[#212121] text-sm font-medium">
-                  Weather
-                </a>
-              </nav>
+              <Navbar />
             </div>
             <div className="flex flex-1 justify-end items-center gap-4">
               <label className="hidden sm:flex flex-col min-w-40 h-10 max-w-64">
@@ -92,6 +77,11 @@ function KnowledgeHub() {
                   />
                 </div>
               </label>
+              <Link
+                to="/article/new"
+                className="rounded bg-[#4CAF50] text-white px-5 py-2 font-bold">
+                Add Article
+              </Link>
               {!user && (
                 <Link
                   to={`/`}
@@ -188,27 +178,6 @@ function KnowledgeHub() {
                         </div>
                       </Link>
                     ))}
-                </div>
-                {/* Pagination remains unchanged */}
-                <div className="flex items-center justify-center p-4">
-                  <a
-                    href="#"
-                    className="text-sm font-bold size-10 flex items-center justify-center text-white rounded-lg bg-[#2E7D32]">
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="size-10 flex items-center justify-center rounded-lg hover:bg-[#F5F5F5] text-[#212121]">
-                    2
-                  </a>
-                  <span className="size-10 flex items-center justify-center text-[#212121] rounded-lg">
-                    ...
-                  </span>
-                  <a
-                    href="#"
-                    className="size-10 flex items-center justify-center rounded-lg hover:bg-[#F5F5F5] text-[#212121]">
-                    10
-                  </a>
                 </div>
               </div>
               {/* Sidebar */}

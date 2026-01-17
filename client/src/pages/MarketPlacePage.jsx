@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 const CATEGORIES = [
   "All Products",
@@ -42,17 +43,28 @@ export default function MarketplacePage() {
       <header className="sticky top-0 z-10 w-full bg-white/80 backdrop-blur-sm border-b border-black/10">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#4CAF50] text-3xl">
-              agriculture
-            </span>
-            <h2 className="text-xl font-bold tracking-tight">Krishisathi</h2>
-          </div>
-          <div className="flex w-full items-stretch rounded-lg h-full">
-            <div className="flex items-center justify-center pl-3 rounded-l-lg bg-[#F5F5F5] text-gray-500 border-r-0">
-              <span className="material-symbols-outlined">search</span>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-3 text-[#3E2723]">
+                <span className="size-6 text-[#4CAF50] font-bold">
+                  <svg width={30} height={30} viewBox="0 0 48 48">
+                    <path
+                      d="M6 6H42L36 24L42 42H6L12 24L6 6Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+                <span className="text-lg font-bold tracking-tight">
+                  Krishisathi
+                </span>
+              </div>
+              <div className="flex items-center gap-8">
+                <Navbar />
+              </div>
             </div>
+          </div>
+          <div className="flex gap-4 items-center">
             <input
-              className="form-input w-full min-w-0 flex-1 rounded-lg text-[#212121] bg-[#F5F5F5] h-full px-4 border-none placeholder:text-gray-500"
+              className="bg-[#F5F5F5] px-4 py-2 rounded-lg w-64 outline-none border-none"
               placeholder="Search Products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -61,7 +73,7 @@ export default function MarketplacePage() {
           <Link
             to="/admin/products"
             className="rounded bg-[#4CAF50] text-white px-5 py-2 font-bold">
-            Admin Panel
+            Sell Products
           </Link>
         </div>
       </header>

@@ -29,7 +29,7 @@ const App = () => {
       <Route path="/article" element={<KnowledgeHub />} />
       <Route path="/article/:id" element={<ArticleDetail />} />
       <Route path="/article/new" element={<ArticleForm />} />
-      <Route path="/article/:id/edit" element={<ArticleForm />} />
+      <Route path="/article/edit/:id" element={<ArticleForm />} />
       <Route path="/forum" element={<ForumList />} />
       <Route path="/forum/post/:id" element={<ForumDetail />} />
       <Route path="/forum/new" element={<ForumCreate />} />

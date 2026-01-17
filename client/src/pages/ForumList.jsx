@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 const CATEGORIES = [
   "All",
@@ -56,17 +57,7 @@ export default function ForumList() {
               Krishisathi
             </span>
           </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <a className="text-[#6D4C41] hover:text-[#3E2723]" href="#">
-              Home
-            </a>
-            <a className="text-[#6D4C41] hover:text-[#3E2723]" href="#">
-              Market
-            </a>
-            <a className="text-[#3E2723] font-bold" href="#">
-              Forum
-            </a>
-          </nav>
+          <Navbar />
         </div>
         <div className="flex gap-4 items-center">
           <input

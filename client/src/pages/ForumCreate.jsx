@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const CATEGORIES = [
   "Crop Management",
@@ -50,17 +51,7 @@ export default function ForumCreate() {
           </span>
           <span className="text-lg font-bold tracking-tight">Krishisathi</span>
         </div>
-        <nav className="flex gap-10">
-          <Link to="/" className="text-[#6D4C41] hover:text-[#3E2723]">
-            Home
-          </Link>
-          <Link to="#" className="text-[#6D4C41] hover:text-[#3E2723]">
-            Market
-          </Link>
-          <Link to="/forum" className="text-[#3E2723] font-bold">
-            Forum
-          </Link>
-        </nav>
+        <Navbar />
         <div
           className="bg-center bg-cover rounded-full size-9"
           style={{ backgroundImage: `url('/avatar.jpg')` }}></div>
