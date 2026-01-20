@@ -33,9 +33,6 @@ function ArticleDetail() {
     <div className="min-h-screen bg-white">
       <header className="max-w-7xl m-auto px-4 py-6 border-b border-[#F5F5F5] flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 text-[#2E7D32]">
-          <span className="material-symbols-outlined text-3xl">
-            agriculture
-          </span>
           <span className="font-bold text-xl">Krishisathi</span>
         </Link>
         <Link

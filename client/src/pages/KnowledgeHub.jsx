@@ -61,7 +61,6 @@ function KnowledgeHub() {
                   Krishisathi
                 </h2>
               </div>
-              <Navbar />
             </div>
             <div className="flex flex-1 justify-end items-center gap-4">
               <label className="hidden sm:flex flex-col min-w-40 h-10 max-w-64">

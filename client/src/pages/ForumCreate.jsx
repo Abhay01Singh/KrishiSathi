@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
 const CATEGORIES = [
   "Crop Management",
@@ -51,7 +50,6 @@ export default function ForumCreate() {
           </span>
           <span className="text-lg font-bold tracking-tight">Krishisathi</span>
         </div>
-        <Navbar />
         <div
           className="bg-center bg-cover rounded-full size-9"
           style={{ backgroundImage: `url('/avatar.jpg')` }}></div>

@@ -57,7 +57,6 @@ export default function ForumList() {
               Krishisathi
             </span>
           </div>
-          <Navbar />
         </div>
         <div className="flex gap-4 items-center">
           <input

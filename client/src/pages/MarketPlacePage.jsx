@@ -41,42 +41,28 @@ export default function MarketplacePage() {
   return (
     <div className="font-display bg-[#F5F5DC] min-h-screen text-[#111812]">
       <header className="sticky top-0 z-10 w-full bg-white/80 backdrop-blur-sm border-b border-black/10">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-3 text-[#3E2723]">
-                <span className="size-6 text-[#4CAF50] font-bold">
-                  <svg width={30} height={30} viewBox="0 0 48 48">
-                    <path
-                      d="M6 6H42L36 24L42 42H6L12 24L6 6Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </span>
-                <span className="text-lg font-bold tracking-tight">
-                  Krishisathi
-                </span>
-              </div>
-              <div className="flex items-center gap-8">
-                <Navbar />
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-4 items-center">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center">
+          {/* CENTER SPACER */}
+          <div className="flex-1" />
+
+          {/* RIGHT: Search + Sell */}
+          <div className="flex items-center gap-4">
             <input
-              className="bg-[#F5F5F5] px-4 py-2 rounded-lg w-64 outline-none border-none"
+              className="bg-[#F5F5F5] px-4 py-2 rounded-lg w-64 outline-none text-sm"
               placeholder="Search Products..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
+
+            <Link
+              to="/admin/products"
+              className="bg-[#4CAF50] text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-green-700 transition">
+              Sell Products
+            </Link>
           </div>
-          <Link
-            to="/admin/products"
-            className="rounded bg-[#4CAF50] text-white px-5 py-2 font-bold">
-            Sell Products
-          </Link>
         </div>
       </header>
+
       <main className="container mx-auto px-4 py-8 min-h-[60vh]">
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="w-full lg:w-64 xl:w-72 flex-shrink-0">
